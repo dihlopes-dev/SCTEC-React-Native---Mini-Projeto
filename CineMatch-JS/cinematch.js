@@ -15,7 +15,7 @@ function criarPerfilUsuario() {
   const idade = Number(prompt("Qual é a sua idade? "));
   const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula, ex: Ação, Comédia, Terror): ");
 
-  const generosFavoritos = [];
+  /*const generosFavoritos = [];
   let generoAtual = "";
 
   for (let i = 0; i < generosInput.length; i++) {
@@ -29,7 +29,7 @@ function criarPerfilUsuario() {
       }
       generoAtual = "";
     } else {
-      generoAtual += caractere;
+      generoAtual += caractere;    
     }
   }
 
@@ -37,6 +37,14 @@ function criarPerfilUsuario() {
   if (ultimoGenero !== "") {
     generosFavoritos.push(ultimoGenero);
   }
+    
+  **Trocamos o FOR pelo método .split(",") / IF-ELSE por template literals*/
+  
+  const generosFavoritos = generosInput
+    ? generosInput.split(",").map((g) => g.trim()).filter((g) => g.length > 0) : [];
+    // Métodos de array que não vimos em aula: 
+    // .split() transforma string em array ( toda vez que digitar o gênero no terminal)
+    // .trim() elimina os espaços criado nas strings pelo usuário
 
   const usuario = {
     nome: nome || "Convidado",
