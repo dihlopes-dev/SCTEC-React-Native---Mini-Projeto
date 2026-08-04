@@ -19,8 +19,8 @@ function criarPerfilUsuario() {
     ? generosInput.split(",").map((g) => g.trim()).filter((g) => g.length > 0) : [];
  
   const usuario = {
-    nome: nome || "Convidado",
-    idade: idade || 0,
+    nome: nome,
+    idade: idade,
     generosFavoritos: generosFavoritos
   };
 
@@ -87,8 +87,69 @@ const catalogo = [
   new Series("S3", "Naruto", "Série", ["Animes", "Aventura"], "14 Anos", 9, 220)
 ];
 
-catalogo.forEach(item => {
+function exibirCatalogo(){
+const meuCatalogo = catalogo.forEach(item => {
                     (item.tipo === "Filme") 
                     ? console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes())
                     : console.log(item.exibirResumoConteudo() + item.exibirResumoSeries());
 })
+
+return meuCatalogo;
+
+}
+
+function exibirPerfil(usuario){
+  console.log(`\n-------------------------MEU PERFIL-------------------------`);
+  console.log(`Nome: ${usuario.nome}`);
+  console.log(`Idade: ${usuario.idade}`);
+  console.log(`Gêneros favoritos: ${usuario.generosFavoritos.join(', ' )}`);
+  console.log(`--------------------------------------------------------------\n`);
+}
+
+// ==============================================================
+//RF-15 Criar menu interativo com opções
+// ==============================================================
+
+function criaMenuInterativo(){
+
+let opcao = "";
+let usuarioCriado = null;
+
+do {
+console.log("\n===== CineMatch JS =====");
+console.log("1 - Criar Perfil");
+console.log("2 - Ver meu perfil");
+console.log("3 - Ver catálogo completo");
+console.log("4 - Calcular compatibilidade com todos os conteúdos");
+console.log("5 - Ver o conteúdo mais recomendado");
+console.log("6 - Sair");
+
+opcao = prompt("Escolha uma opção: ");
+
+switch (opcao) {
+case "1":
+usuarioCriado = criarPerfilUsuario();
+break;
+case "2":
+  usuarioCriado ? exibirPerfil(usuarioCriado) : console.log(" \n Usuário inválido");
+break;
+case "3":
+exibirCatalogo();
+break;
+case "4":
+calcularCompatibilidades(criarPerfilUsuario(), catalogo);
+break;
+case "5":
+exibirRecomendacaoPrincipal(criarPerfilUsuario(), catalogo);
+break;
+case "6":
+console.log("Até a próxima maratona!");
+break;
+default:
+console.log("Opção inválida, tente novamente.");
+}
+} while (opcao !== "6");
+}
+
+
+criaMenuInterativo();
