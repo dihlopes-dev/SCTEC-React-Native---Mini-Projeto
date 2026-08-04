@@ -13,6 +13,14 @@ function criarPerfilUsuario() {
   console.log("--- BEM-VINDO AO CINEMATCH JS ---");
   const nome = prompt("Qual é o seu nome? ");
   const idade = Number(prompt("Qual é a sua idade? "));
+//disponibiliza uma lista de gêneros em ordem alfabética
+//...new Set remove itens duplicados
+//flatMap junta todos os arrays de generos em um só
+//.sort() coloca em ordem alfabética
+  const generosDisponiveis = [...new Set(catalogo.flatMap(conteudo => conteudo.generos))].sort();
+  console.log("\n--- Gêneros Disponíveis ---");
+  console.log(generosDisponiveis.join(" | "));
+  console.log("---------------------------");
   const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula, ex: Ação, Comédia, Terror): ");
   
   const generosFavoritos = generosInput
@@ -124,7 +132,7 @@ console.log("4 - Calcular compatibilidade com todos os conteúdos");
 console.log("5 - Ver o conteúdo mais recomendado");
 console.log("6 - Sair");
 
-opcao = prompt("Escolha uma opção: ");
+opcao = prompt("\nEscolha uma opção: ");
 
 switch (opcao) {
 case "1":
