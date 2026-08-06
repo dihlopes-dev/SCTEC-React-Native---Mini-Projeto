@@ -4,71 +4,32 @@
 
 const prompt = require('prompt-sync')({ sigint: true });
 
-<<<<<<< Updated upstream
-// ==========================================
-// RF01 — Captura de Perfil via Terminal
-// ==========================================
-function criarPerfilUsuario() {
-  console.log("--- BEM-VINDO AO CINEMATCH JS ---");
-  const nome = prompt("Qual é o seu nome? ");
-  const idade = Number(prompt("Qual é a sua idade? "));
-  const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula, ex: Ação, Comédia, Terror): ");
-  
-  const generosFavoritos = generosInput
-    ? generosInput.split(",").map((g) => g.trim()).filter((g) => g.length > 0) : [];
- 
-  const usuario = {
-    nome: nome || "Convidado",
-    idade: idade || 0,
-    generosFavoritos: generosFavoritos
-  };
-
-  return usuario;
-}
-
-// ==========================================
-// RF02 — Criar Catálogo de Conteúdos
-// ==========================================
-=======
->>>>>>> Stashed changes
 
 // --- CLASSES ---
 class Conteudo {
-  constructor(id, titulo, tipo, generos){
+  constructor(id, titulo, tipo, generos) {
     this.id = id;
     this.titulo = titulo;
     this.tipo = tipo;
     this.generos = generos;
   }
 
-<<<<<<< Updated upstream
-  exibirResumoConteudo(){
-=======
   exibirResumoConteudo() {
->>>>>>> Stashed changes
     return `
       ID: ${this.id}
       Título: ${this.titulo}
       Tipo: ${this.tipo}
-<<<<<<< Updated upstream
-      Gêneros: ${this.generos}`;
-=======
       Gêneros: ${this.generos.join(", ")}`;
->>>>>>> Stashed changes
   }
 }
 
 class Filmes extends Conteudo {
-  constructor(id, titulo, tipo, generos, duracaoMinutos, classificacao){
+  constructor(id, titulo, tipo, generos, duracaoMinutos, classificacao) {
     super(id, titulo, tipo, generos);
     this.duracaoMinutos = duracaoMinutos;
     this.classificacao = classificacao;
   }
-<<<<<<< Updated upstream
-  exibirResumoFilmes(){
-=======
   exibirResumoFilmes() {
->>>>>>> Stashed changes
     return `
       Duração (min): ${this.duracaoMinutos}
       Classificação: ${this.classificacao}`;
@@ -76,17 +37,13 @@ class Filmes extends Conteudo {
 }
 
 class Series extends Conteudo {
-  constructor(id, titulo, tipo, generos, classificacao, temporadas, episodios){
+  constructor(id, titulo, tipo, generos, classificacao, temporadas, episodios) {
     super(id, titulo, tipo, generos);
     this.classificacao = classificacao;
     this.temporadas = temporadas;
     this.episodios = episodios;
   }
-<<<<<<< Updated upstream
-  exibirResumoSeries(){
-=======
   exibirResumoSeries() {
->>>>>>> Stashed changes
     return `
       Classificação: ${this.classificacao}
       Temporadas: ${this.temporadas}
@@ -105,13 +62,6 @@ const catalogo = [
   new Series("S3", "Naruto", "Série", ["Animes", "Aventura"], "14 Anos", 9, 220)
 ];
 
-<<<<<<< Updated upstream
-catalogo.forEach(item => {
-                    (item.tipo === "Filme") 
-                    ? console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes())
-                    : console.log(item.exibirResumoConteudo() + item.exibirResumoSeries());
-})
-=======
 // --- CONCEITO: ASYNC / AWAIT ---
 const simularCarregamento = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -310,4 +260,3 @@ async function criaMenuInterativo() {
 
 // Executa a função assíncrona do menu
 criaMenuInterativo();
->>>>>>> Stashed changes
