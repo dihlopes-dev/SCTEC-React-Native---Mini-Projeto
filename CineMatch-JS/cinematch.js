@@ -79,8 +79,13 @@ async function carregarCatalogoAsync() {
 }
 
 // 1 - CRIAR PERFIL (OBRIGATÓRIO)
-function criarPerfilUsuario() {
-  console.log("\n---🎬 BEM-VINDO AO CINEMATCH JS 📽️---\n");
+// CLOSURE CRIADA AQUI
+function gerarPerfilUsuario() {
+  let contadorPerfil = -1;
+  return function() {
+     console.log("\n---🎬 BEM-VINDO AO CINEMATCH JS 📽️---\n");
+     
+     contadorPerfil ++;
 
   let nome = "";
   // 🔒 Validação de Nome
@@ -126,17 +131,28 @@ function criarPerfilUsuario() {
   return {
     nome,
     idade,
-    generosFavoritos
+    generosFavoritos,
+    versaoPerfil: contadorPerfil
+  };
   };
 }
+
+const criarPerfilUsuario = gerarPerfilUsuario();
 
 // 2 - EXIBIR PERFIL
 function exibirPerfil(usuario) {
   console.log(`\n-------------------------MEU PERFIL-------------------------`);
   console.log(`👤 Nome: ${usuario.nome}`);
   console.log(`🆔 Idade: ${usuario.idade}`);
-  console.log(`💖 Gêneros favoritos: ${usuario.generosFavoritos.join(', ')}`);
-  console.log(`--------------------------------------------------------------\n`);
+  console.log(`💖 Gêneros favoritos: ${usuario.generosFavoritos.join(", ")}`);
+
+  const tipoAcao =
+    usuario.versaoPerfil === 0
+      ? "Pefil original"
+      : `${usuario.versaoPerfil}ª modificação`;
+  console.log(`🔄 Status do perfil: ${tipoAcao}`);
+  console.log(`--------------------------------------------------------------\n`,
+  );
 }
 
 // 4 - CALCULAR COMPATIBILIDADE 
@@ -193,18 +209,23 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
     calcularCompatibilidadeConteudo(usuario, conteudo)
   );
 
-  const maisRecomendado = analises.reduce((maior, atual) => {
+  const maiorPercentual = analises.reduce((maior, atual) => {
     const numAtual = parseInt(atual.percentual);
-    const numMaior = parseInt(maior.percentual);
-    return numAtual > numMaior ? atual : maior;
-  }, analises[0]);
+    return numAtual > maior ? numAtual : maior;
+  }, 0);
+
+  const recomendados = analises.filter((item) =>
+    parseInt(item.percentual) === maiorPercentual
+  );
 
   console.log("\n========== CONTEÚDO MAIS RECOMENDADO ==========");
+  recomendados.forEach((maisRecomendado) => {  
   console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
   console.log(`Compatibilidade: ${maisRecomendado.percentual} (${maisRecomendado.classificacao})`);
   console.log(`Gêneros em comum: ${maisRecomendado.generosEmComum.length > 0 ? maisRecomendado.generosEmComum.join(", ") : "Nenhum"}`);
   console.log(`Gêneros não explorados: ${maisRecomendado.generosNaoExplorados.length > 0 ? maisRecomendado.generosNaoExplorados.join(", ") : "Nenhum"}`);
   console.log("================================================\n");
+});
 }
 
 // ==============================================================
