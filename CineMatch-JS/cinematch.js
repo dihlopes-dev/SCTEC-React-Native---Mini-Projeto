@@ -79,6 +79,7 @@ async function carregarCatalogoAsync() {
 }
 
 // 1 - CRIAR PERFIL (OBRIGATÓRIO)
+// CLOSURE CRIADA AQUI
 function gerarPerfilUsuario() {
   let contadorPerfil = -1;
   return function() {
