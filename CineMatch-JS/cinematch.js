@@ -1,41 +1,35 @@
 //==========================================================================
-//***SCTEC: Projeto Avaliativo M1S6 - Desenvolvimento Mobile React Native***
+//**SCTEC: Projeto Avaliativo M1S6 - Desenvolvimento Mobile React Native**
 //==========================================================================
-
-//***Onboarding Interativo ( Via Terminal )
 
 const prompt = require('prompt-sync')({ sigint: true });
 
-// CATÁLOGO DE CONTEÚDOS
 
-// ==========================================
-// RF02 — Criar Catálogo de Conteúdos
-// ==========================================
-
+// --- CLASSES ---
 class Conteudo {
-  constructor(id, titulo, tipo, generos){
+  constructor(id, titulo, tipo, generos) {
     this.id = id;
     this.titulo = titulo;
     this.tipo = tipo;
     this.generos = generos;
   }
 
-  exibirResumoConteudo(){
+  exibirResumoConteudo() {
     return `
       ID: ${this.id}
       Título: ${this.titulo}
       Tipo: ${this.tipo}
-      Gêneros: ${this.generos}`;
+      Gêneros: ${this.generos.join(", ")}`;
   }
 }
 
 class Filmes extends Conteudo {
-  constructor(id, titulo, tipo, generos, duracaoMinutos, classificacao){
+  constructor(id, titulo, tipo, generos, duracaoMinutos, classificacao) {
     super(id, titulo, tipo, generos);
     this.duracaoMinutos = duracaoMinutos;
     this.classificacao = classificacao;
   }
-  exibirResumoFilmes(){
+  exibirResumoFilmes() {
     return `
       Duração (min): ${this.duracaoMinutos}
       Classificação: ${this.classificacao}`;
@@ -43,13 +37,13 @@ class Filmes extends Conteudo {
 }
 
 class Series extends Conteudo {
-  constructor(id, titulo, tipo, generos, classificacao, temporadas, episodios){
+  constructor(id, titulo, tipo, generos, classificacao, temporadas, episodios) {
     super(id, titulo, tipo, generos);
     this.classificacao = classificacao;
     this.temporadas = temporadas;
     this.episodios = episodios;
   }
-  exibirResumoSeries(){
+  exibirResumoSeries() {
     return `
       Classificação: ${this.classificacao}
       Temporadas: ${this.temporadas}
@@ -68,80 +62,106 @@ const catalogo = [
   new Series("S3", "Naruto", "Série", ["Animes", "Aventura"], "14 Anos", 9, 220)
 ];
 
-//================================================================
-//                  TODAS AS FUNÇÕES                              
-//================================================================
-// Seguindo os itens numéricos do menu interativo
+// --- CONCEITO: ASYNC / AWAIT ---
+const simularCarregamento = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// 1 - CRIAR PERFIL 
+async function carregarCatalogoAsync() {
+  console.log("\n🔄 Carregando dados do catálogo...");
+  await simularCarregamento(5000); // Espera 5s simulando requisição de rede
+  
+  catalogo.forEach((item) => {
+    if (item instanceof Filmes) {
+      console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes());
+    } else if (item instanceof Series) {
+      console.log(item.exibirResumoConteudo() + item.exibirResumoSeries());
+    }
+  });
+}
 
-// ==========================================
-// RF01 — Captura de Perfil via Terminal
-// ==========================================
-function criarPerfilUsuario() {
-  console.log("--- BEM-VINDO AO CINEMATCH JS ---");
-  const nome = prompt("Qual é o seu nome? ");
-  const idade = Number(prompt("Qual é a sua idade? "));
-//disponibiliza uma lista de gêneros em ordem alfabética
-//...new Set remove itens duplicados
-//flatMap junta todos os arrays de generos em um só
-//.sort() coloca em ordem alfabética
+// 1 - CRIAR PERFIL (OBRIGATÓRIO)
+function gerarPerfilUsuario() {
+  let contadorPerfil = -1;
+  return function() {
+     console.log("\n---🎬 BEM-VINDO AO CINEMATCH JS 📽️---\n");
+     
+     contadorPerfil ++;
+
+  let nome = "";
+  // 🔒 Validação de Nome
+  do {
+    const entradaNome = prompt("Qual é o seu nome?: ");
+    // Garante que se o prompt retornar null/undefined, vira string vazia ""
+    nome = entradaNome ? entradaNome.trim() : "";
+
+    if (!nome) {
+      console.log("⚠️ O nome é obrigatório para continuar!");
+    }
+  } while (!nome);
+
+  let idade = NaN;
+  // 🔒 Validação de Idade 
+  do {
+    const entradaIdade = prompt("Qual é a sua idade?: ");
+    const textoLimpo = entradaIdade ? entradaIdade.trim() : "";
+
+    // Se o texto estiver vazio, mantemos NaN
+    idade = textoLimpo !== "" ? Number(textoLimpo) : NaN;
+
+    if (isNaN(idade) || idade <= 0) {
+      console.log("⚠️ Por favor, digite uma idade válida (apenas números maiores que 0)!");
+    }
+  } while (isNaN(idade) || idade <= 0);
+
+  // Exibição e seleção dos gêneros favoritos
   const generosDisponiveis = [...new Set(catalogo.flatMap(conteudo => conteudo.generos))].sort();
   console.log("\n--- Gêneros Disponíveis ---");
   console.log(generosDisponiveis.join(" | "));
   console.log("---------------------------");
-  const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula, ex: Ação, Comédia, Terror): ");
-  
-  const generosFavoritos = generosInput
-    ? generosInput.split(",").map((g) => g.trim()).filter((g) => g.length > 0) : [];
- 
-  const usuario = {
-    nome: nome,
-    idade: idade,
-    generosFavoritos: generosFavoritos
-  };
 
-  return usuario;
+  const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula): ");
+  const generosTexto = generosInput ? generosInput.trim() : "";
+
+  const generosFavoritos = generosTexto
+    ? generosTexto.split(",").map((g) => g.trim()).filter((g) => g.length > 0)
+    : [];
+
+  console.log("\n✅ Perfil criado com sucesso!");
+
+  return {
+    nome,
+    idade,
+    generosFavoritos,
+    versaoPerfil: contadorPerfil
+  };
+  };
 }
+
+const criarPerfilUsuario = gerarPerfilUsuario();
 
 // 2 - EXIBIR PERFIL
-
-function exibirPerfil(usuario){
+function exibirPerfil(usuario) {
   console.log(`\n-------------------------MEU PERFIL-------------------------`);
-  console.log(`Nome: ${usuario.nome}`);
-  console.log(`Idade: ${usuario.idade}`);
-  console.log(`Gêneros favoritos: ${usuario.generosFavoritos.join(', ' )}`);
-  console.log(`--------------------------------------------------------------\n`);
-}
+  console.log(`👤 Nome: ${usuario.nome}`);
+  console.log(`🆔 Idade: ${usuario.idade}`);
+  console.log(`💖 Gêneros favoritos: ${usuario.generosFavoritos.join(", ")}`);
 
-// 3 - EXIBIR CATÁLOGO
-function exibirCatalogo(){
-const meuCatalogo = catalogo.forEach(item => {
-                    (item.tipo === "Filme") 
-                    ? console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes())
-                    : console.log(item.exibirResumoConteudo() + item.exibirResumoSeries());
-})
-
-return meuCatalogo;
-
+  const tipoAcao =
+    usuario.versaoPerfil === 0
+      ? "Pefil original"
+      : `${usuario.versaoPerfil}ª modificação`;
+  console.log(`🔄 Status do perfil: ${tipoAcao}`);
+  console.log(`--------------------------------------------------------------\n`,
+  );
 }
 
 // 4 - CALCULAR COMPATIBILIDADE 
-
 function calcularCompatibilidadeConteudo(usuario, conteudo) {
-//função auxiliar
-
-function classificarCompatibilidade(percentual) {
-  if (percentual >= 80) {
-    return "Alta afinidade";
-  } else if (percentual >= 50) {
-    return "Média afinidade";
-  } else if (percentual > 0) {
-    return "Baixa afinidade";
-  } else{
+  function classificarCompatibilidade(percentual) {
+    if (percentual >= 80) return "Alta afinidade";
+    if (percentual >= 50) return "Média afinidade";
+    if (percentual > 0) return "Baixa afinidade";
     return "Nenhuma afinidade";
   }
-}
 
   const generosEmComum = conteudo.generos.filter((genero) =>
     usuario.generosFavoritos.some(
@@ -157,33 +177,32 @@ function classificarCompatibilidade(percentual) {
     (generosEmComum.length / conteudo.generos.length) * 100
   );
 
-  const classificacao = classificarCompatibilidade(percentual);
-
   return {
     titulo: conteudo.titulo,
     tipo: conteudo.tipo,
     percentual: `${percentual}%`,
-    classificacao: classificacao,
-    generosEmComum: generosEmComum,
-    generosNaoExplorados: generosNaoExplorados
+    classificacao: classificarCompatibilidade(percentual),
+    generosEmComum,
+    generosNaoExplorados
   };
 }
 
-function exibirCompatibilidade(usuarioCriado, conteudo){
-  (console.log("\n ========== COMPATIBILIDADE COM O CATÁLOGO ========="),
+// 5 - COMPATIBILIDADE COM TODO O CATÁLOGO (ASYNC)
+async function exibirCompatibilidadeAsync(usuarioCriado, catalogo) {
+  console.log("\n🔄 Processando compatibilidade com o algoritmo...");
+  await simularCarregamento(3000);
+  
+  console.log("\n ========== COMPATIBILIDADE COM O CATÁLOGO =========\n");
   catalogo.forEach((conteudo) => {
     const resultado = calcularCompatibilidadeConteudo(usuarioCriado, conteudo);
     console.log(`\nTítulo: ${resultado.titulo} (${resultado.tipo})`);
     console.log(`Compatibilidade: ${resultado.percentual} (${resultado.classificacao})`);
     console.log(`Gêneros em comum: ${resultado.generosEmComum.length > 0 ? resultado.generosEmComum.join(", ") : "Nenhum"}`);
     console.log(`Gêneros não explorados: ${resultado.generosNaoExplorados.length > 0 ? resultado.generosNaoExplorados.join(", ") : "Nenhum"}`);
-  }))
+  });
 }
 
- // 5 - VER O CONTEUDO MAIS RECOMENDADO 
-
-
-// ENCONTRAR E EXIBIR MAIOR COMPATIBILIDADE
+// 6 - RECOMENDAÇÃO PRINCIPAL
 function exibirConteudoMaisRecomendado(usuario, catalogo) {
   const analises = catalogo.map((conteudo) =>
     calcularCompatibilidadeConteudo(usuario, conteudo)
@@ -198,8 +217,8 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
     parseInt(item.percentual) === maiorPercentual
   );
 
-  recomendados.forEach((maisRecomendado) => {
   console.log("\n========== CONTEÚDO MAIS RECOMENDADO ==========");
+  recomendados.forEach((maisRecomendado) => {  
   console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
   console.log(`Compatibilidade: ${maisRecomendado.percentual} (${maisRecomendado.classificacao})`);
   console.log(`Gêneros em comum: ${maisRecomendado.generosEmComum.length > 0 ? maisRecomendado.generosEmComum.join(", ") : "Nenhum"}`);
@@ -208,79 +227,50 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
 });
 }
 
-
 // ==============================================================
-//RF-15 Criar menu interativo com opções
+// MENU INTERATIVO (ASYNC/AWAIT)
 // ==============================================================
 
-function criaMenuInterativo(){
+async function criaMenuInterativo() {
+  let opcao = "";
+  let usuarioCriado = null;
 
-let opcao = "";
-let usuarioCriado = null;
+  do {
+    console.log("\n===== CineMatch JS =====\n");
+    console.log("1 - 🔑 Criar Perfil");
+    console.log("2 - 📝 Ver meu perfil");
+    console.log("3 - 📺 Ver catálogo completo");
+    console.log("4 - 📈 Calcular compatibilidade");
+    console.log("5 - 🎯 Ver o conteúdo mais recomendado");
+    console.log("6 - ◀ Sair");
 
-do {
-console.log("\n===== CineMatch JS =====");
-console.log("1 - Criar Perfil");
-console.log("2 - Ver meu perfil");
-console.log("3 - Ver catálogo completo");
-console.log("4 - Calcular compatibilidade com todos os conteúdos");
-console.log("5 - Ver o conteúdo mais recomendado");
-console.log("6 - Sair");
+    opcao = prompt("\nEscolha uma opção: ");
 
-opcao = prompt("\nEscolha uma opção: ");
-
-// switch (opcao) {
-// case "1":
-// usuarioCriado = criarPerfilUsuario();
-// break;
-// case "2":
-// usuarioCriado ? exibirPerfil(usuarioCriado) 
-//               : console.log(" \n Usuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
-// break;
-// case "3":
-// exibirCatalogo();
-// break;
-// case "4":
-//   usuarioCriado ? exibirCompatibilidade(usuarioCriado, catalogo) 
-//                 : console.log("\nUsuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
-// break;
-// case "5":
-// usuarioCriado
-//           ? exibirConteudoMaisRecomendado(usuarioCriado, catalogo)
-//           : console.log("\n❌ Usuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
-//         break;
-// case "6":
-// console.log("Até a próxima maratona!");
-// break;
-// default:
-// console.log("Opção inválida, tente novamente.");
-// }
-// } while (opcao !== "6");
-// }
-switch (opcao) {
+    switch (opcao) {
       case "1":
         usuarioCriado = criarPerfilUsuario();
         break;
       case "2":
         usuarioCriado
           ? exibirPerfil(usuarioCriado)
-          : console.log("\n❌ Usuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
+          : console.log("\n❌ Usuário não encontrado. Crie seu perfil primeiro (Opção 1).");
         break;
       case "3":
-        exibirCatalogo();
+        // Usando o AWAIT dentro do loop do menu
+        await carregarCatalogoAsync();
         break;
       case "4":
         usuarioCriado
-          ? exibirCompatibilidade(usuarioCriado, catalogo)
-          : console.log("\n❌ Usuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
+          ? await exibirCompatibilidadeAsync(usuarioCriado, catalogo)
+          : console.log("\n❌ Usuário não encontrado. Crie seu perfil primeiro (Opção 1).");
         break;
       case "5":
         usuarioCriado
           ? exibirConteudoMaisRecomendado(usuarioCriado, catalogo)
-          : console.log("\n❌ Usuário não encontrado. Por favor, crie seu perfil primeiro (Opção 1).");
+          : console.log("\n❌ Usuário não encontrado. Crie seu perfil primeiro (Opção 1).");
         break;
       case "6":
-        console.log("Até a próxima maratona! 🍿");
+        console.log("Até a próxima maratona! 🍿\n");
         break;
       default:
         console.log("⚠️ Opção inválida, tente novamente.");
@@ -288,5 +278,5 @@ switch (opcao) {
   } while (opcao !== "6");
 }
 
-
+// Executa a função assíncrona do menu
 criaMenuInterativo();
