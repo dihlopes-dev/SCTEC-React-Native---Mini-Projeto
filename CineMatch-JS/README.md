@@ -60,11 +60,14 @@ O projeto foi estruturado utilizando recursos fundamentais do ecossistema JavaSc
 
 🏁 Como Executar o Projeto
 
-1 - Instale as dependências no terminal:
+1 - Clone o repositório do mini projeto através do link:
+https://github.com/dihlopes-dev/SCTEC-React-Native---Mini-Projeto
+
+2 - Instale as dependências no terminal:
 
 npm install
 
-2 - Execute a aplicação:
+3 - Execute a aplicação:
 
 cd <NOME_DA_PASTA>
 node cinematch.js
