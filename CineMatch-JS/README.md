@@ -96,4 +96,4 @@ Quais gêneros você mais gosta? (separe por vírgula): Acao, Suspense
 
 
 
-#***Este mini projeto foi desenvolvido por Roberto Pedro da Silva e Diego Pereira Lopes para o curso de Desenvolvimento Mobile React Native - SCTEC.***
+***Este mini projeto foi desenvolvido por Roberto Pedro da Silva e Diego Pereira Lopes para o curso de Desenvolvimento Mobile React Native - SCTEC.***
