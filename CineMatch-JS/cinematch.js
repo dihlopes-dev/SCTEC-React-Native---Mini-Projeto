@@ -229,13 +229,13 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
       .slice(0, 2);
   }
  
-  console.log(`\n========== CONTEÚDO MAIS RECOMENDADO DE ${usuario.nome.toUpperCase()} ==========`);
+  console.log(`\n========== CONTEÚDO MAIS RECOMENDADO PARA ${usuario.nome.toUpperCase()} ==========`);
   recomendados.forEach((maisRecomendado) => {
     console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
     console.log(`Compatibilidade: ${maisRecomendado.percentual} (${maisRecomendado.classificacao})`);
     console.log(`Gêneros que você mais curte: ${maisRecomendado.generosEmComum.length > 0 ? maisRecomendado.generosEmComum.join(", ") : "Nenhum"}`);
   });
-  console.log(`\n\n${usuario.nome}, você vai gostar de: ${generosSugeridos.length > 0 ? generosSugeridos.join(" e ") : "Nenhum"}`);
+  console.log(`\n\n${usuario.nome}, você também pode gostar de: ${generosSugeridos.length > 0 ? generosSugeridos.join(" e ") : "Nenhum"}`);
   console.log("================================================\n");
 }
 
