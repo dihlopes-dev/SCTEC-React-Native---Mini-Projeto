@@ -1,50 +1,5 @@
 const prompt = require('prompt-sync')({ sigint: true });
 
-// --- CLASSES ---
-class Conteudo {
-  constructor(id, titulo, tipo, generos) {
-    this.id = id;
-    this.titulo = titulo;
-    this.tipo = tipo;
-    this.generos = generos;
-  }
-
-  exibirResumoConteudo() {
-    return `
-     ID: ${this.id}
-     Título: ${this.titulo}
-     Tipo: ${this.tipo}
-     Gêneros: ${this.generos.join(", ")}`;
-  }
-}
-
-class Filmes extends Conteudo {
-  constructor(id, titulo, tipo, generos, duracaoMinutos, classificacao) {
-    super(id, titulo, tipo, generos);
-    this.duracaoMinutos = duracaoMinutos;
-    this.classificacao = classificacao;
-  }
-  exibirResumoFilmes() {
-    return `
-     Duração (min): ${this.duracaoMinutos}
-     Classificação: ${this.classificacao}`;
-  }
-}
-
-class Series extends Conteudo {
-  constructor(id, titulo, tipo, generos, classificacao, temporadas, episodios) {
-    super(id, titulo, tipo, generos);
-    this.classificacao = classificacao;
-    this.temporadas = temporadas;
-    this.episodios = episodios;
-  }
-  exibirResumoSeries() {
-    return `
-     Classificação: ${this.classificacao}
-     Temporadas: ${this.temporadas}
-     Episódios: ${this.episodios}`;
-  }
-}
 
 const catalogo = [
   new Filmes("F1", "Invasores", "Filme", ["Terror", "Suspense"], 99, "14 Anos"),
@@ -57,21 +12,6 @@ const catalogo = [
   new Series("S3", "Naruto", "Série", ["Animes", "Aventura"], "14 Anos", 9, 220)
 ];
 
-// --- CONCEITO: ASYNC / AWAIT ---
-const simularCarregamento = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-async function carregarCatalogoAsync() {
-  console.log("\n🔄 Carregando dados do catálogo...");
-  await simularCarregamento(5000); // Espera 5s simulando requisição de rede
-
-  catalogo.forEach((item) => {
-    if (item instanceof Filmes) {
-      console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes());
-    } else if (item instanceof Series) {
-      console.log(item.exibirResumoConteudo() + item.exibirResumoSeries());
-    }
-  });
-}
 
 // 1 - CRIAR PERFIL (OBRIGATÓRIO)
 // CLOSURE CRIADA AQUI
