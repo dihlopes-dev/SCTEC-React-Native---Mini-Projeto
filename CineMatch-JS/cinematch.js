@@ -4,7 +4,6 @@
 
 const prompt = require('prompt-sync')({ sigint: true });
 
-
 // --- CLASSES ---
 class Conteudo {
   constructor(id, titulo, tipo, generos) {
@@ -16,10 +15,10 @@ class Conteudo {
 
   exibirResumoConteudo() {
     return `
-      ID: ${this.id}
-      Título: ${this.titulo}
-      Tipo: ${this.tipo}
-      Gêneros: ${this.generos.join(", ")}`;
+     ID: ${this.id}
+     Título: ${this.titulo}
+     Tipo: ${this.tipo}
+     Gêneros: ${this.generos.join(", ")}`;
   }
 }
 
@@ -31,8 +30,8 @@ class Filmes extends Conteudo {
   }
   exibirResumoFilmes() {
     return `
-      Duração (min): ${this.duracaoMinutos}
-      Classificação: ${this.classificacao}`;
+     Duração (min): ${this.duracaoMinutos}
+     Classificação: ${this.classificacao}`;
   }
 }
 
@@ -45,9 +44,9 @@ class Series extends Conteudo {
   }
   exibirResumoSeries() {
     return `
-      Classificação: ${this.classificacao}
-      Temporadas: ${this.temporadas}
-      Episódios: ${this.episodios}`;
+     Classificação: ${this.classificacao}
+     Temporadas: ${this.temporadas}
+     Episódios: ${this.episodios}`;
   }
 }
 
@@ -68,7 +67,7 @@ const simularCarregamento = (ms) => new Promise((resolve) => setTimeout(resolve,
 async function carregarCatalogoAsync() {
   console.log("\n🔄 Carregando dados do catálogo...");
   await simularCarregamento(5000); // Espera 5s simulando requisição de rede
-  
+
   catalogo.forEach((item) => {
     if (item instanceof Filmes) {
       console.log(item.exibirResumoConteudo() + item.exibirResumoFilmes());
@@ -79,63 +78,76 @@ async function carregarCatalogoAsync() {
 }
 
 // 1 - CRIAR PERFIL (OBRIGATÓRIO)
-function criarPerfilUsuario() {
-  console.log("\n---🎬 BEM-VINDO AO CINEMATCH JS 📽️---\n");
+// CLOSURE CRIADA AQUI
+function gerarPerfilUsuario() {
+  let contadorPerfil = -1;
+  return function() {
+    console.log("\n---🎬 BEM-VINDO AO CINEMATCH JS 📽️---\n");
 
-  let nome = "";
-  // 🔒 Validação de Nome
-  do {
-    const entradaNome = prompt("Qual é o seu nome?: ");
-    // Garante que se o prompt retornar null/undefined, vira string vazia ""
-    nome = entradaNome ? entradaNome.trim() : "";
+    contadorPerfil++;
 
-    if (!nome) {
-      console.log("⚠️ O nome é obrigatório para continuar!");
-    }
-  } while (!nome);
+    let nome = "";
+    // 🔒 Validação de Nome
+    do {
+      const entradaNome = prompt("Qual é o seu nome?: ");
+      nome = entradaNome ? entradaNome.trim() : "";
 
-  let idade = NaN;
-  // 🔒 Validação de Idade 
-  do {
-    const entradaIdade = prompt("Qual é a sua idade?: ");
-    const textoLimpo = entradaIdade ? entradaIdade.trim() : "";
+      if (!nome) {
+        console.log("⚠️ O nome é obrigatório para continuar!");
+      }
+    } while (!nome);
 
-    // Se o texto estiver vazio, mantemos NaN
-    idade = textoLimpo !== "" ? Number(textoLimpo) : NaN;
+    let idade = NaN;
+    // 🔒 Validação de Idade 
+    do {
+      const entradaIdade = prompt("Qual é a sua idade?: ");
+      const textoLimpo = entradaIdade ? entradaIdade.trim() : "";
 
-    if (isNaN(idade) || idade <= 0) {
-      console.log("⚠️ Por favor, digite uma idade válida (apenas números maiores que 0)!");
-    }
-  } while (isNaN(idade) || idade <= 0);
+      idade = textoLimpo !== "" ? Number(textoLimpo) : NaN;
 
-  // Exibição e seleção dos gêneros favoritos
-  const generosDisponiveis = [...new Set(catalogo.flatMap(conteudo => conteudo.generos))].sort();
-  console.log("\n--- Gêneros Disponíveis ---");
-  console.log(generosDisponiveis.join(" | "));
-  console.log("---------------------------");
+      if (isNaN(idade) || idade <= 0) {
+        console.log("⚠️ Por favor, digite uma idade válida (apenas números maiores que 0)!");
+      }
+    } while (isNaN(idade) || idade <= 0);
 
-  const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula): ");
-  const generosTexto = generosInput ? generosInput.trim() : "";
+    // Exibição e seleção dos gêneros favoritos
+    const generosDisponiveis = [...new Set(catalogo.flatMap(conteudo => conteudo.generos))].sort();
+    console.log("\n--- Gêneros Disponíveis ---");
+    console.log(generosDisponiveis.join(" | "));
+    console.log("---------------------------");
 
-  const generosFavoritos = generosTexto
-    ? generosTexto.split(",").map((g) => g.trim()).filter((g) => g.length > 0)
-    : [];
+    const generosInput = prompt("Quais gêneros você mais gosta? (separe por vírgula): ");
+    const generosTexto = generosInput ? generosInput.trim() : "";
 
-  console.log("\n✅ Perfil criado com sucesso!");
+    const generosFavoritos = generosTexto
+      ? generosTexto.split(",").map((g) => g.trim()).filter((g) => g.length > 0)
+      : [];
 
-  return {
-    nome,
-    idade,
-    generosFavoritos
+    console.log("\n✅ Perfil criado com sucesso!");
+
+    return {
+      nome,
+      idade,
+      generosFavoritos,
+      versaoPerfil: contadorPerfil
+    };
   };
 }
+
+const criarPerfilUsuario = gerarPerfilUsuario();
 
 // 2 - EXIBIR PERFIL
 function exibirPerfil(usuario) {
   console.log(`\n-------------------------MEU PERFIL-------------------------`);
   console.log(`👤 Nome: ${usuario.nome}`);
   console.log(`🆔 Idade: ${usuario.idade}`);
-  console.log(`💖 Gêneros favoritos: ${usuario.generosFavoritos.join(', ')}`);
+  console.log(`💖 Gêneros favoritos: ${usuario.generosFavoritos.join(", ")}`);
+
+  const tipoAcao =
+    usuario.versaoPerfil === 0
+      ? "Perfil original"
+      : `${usuario.versaoPerfil}ª modificação`;
+  console.log(`🔄 Status do perfil: ${tipoAcao}`);
   console.log(`--------------------------------------------------------------\n`);
 }
 
@@ -172,11 +184,11 @@ function calcularCompatibilidadeConteudo(usuario, conteudo) {
   };
 }
 
-// 5 - COMPATIBILIDADE COM TODO O CATÁLOGO (ASYNC)
-async function exibirCompatibilidadeAsync(usuarioCriado, catalogo) {
+// 5 - COMPATIBILIDADE COM TODO O CATÁLOGO (ASYNC + CALLBACK)
+async function exibirCompatibilidadeAsync(usuarioCriado, catalogo, callbackFinalizacao) {
   console.log("\n🔄 Processando compatibilidade com o algoritmo...");
   await simularCarregamento(3000);
-  
+
   console.log("\n ========== COMPATIBILIDADE COM O CATÁLOGO =========\n");
   catalogo.forEach((conteudo) => {
     const resultado = calcularCompatibilidadeConteudo(usuarioCriado, conteudo);
@@ -185,6 +197,11 @@ async function exibirCompatibilidadeAsync(usuarioCriado, catalogo) {
     console.log(`Gêneros em comum: ${resultado.generosEmComum.length > 0 ? resultado.generosEmComum.join(", ") : "Nenhum"}`);
     console.log(`Gêneros não explorados: ${resultado.generosNaoExplorados.length > 0 ? resultado.generosNaoExplorados.join(", ") : "Nenhum"}`);
   });
+
+  // 🎯 EXECUÇÃO DO CALLBACK
+  if (typeof callbackFinalizacao === "function") {
+    callbackFinalizacao(catalogo.length, usuarioCriado.nome);
+  }
 }
 
 // 6 - RECOMENDAÇÃO PRINCIPAL
@@ -193,17 +210,22 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
     calcularCompatibilidadeConteudo(usuario, conteudo)
   );
 
-  const maisRecomendado = analises.reduce((maior, atual) => {
+  const maiorPercentual = analises.reduce((maior, atual) => {
     const numAtual = parseInt(atual.percentual);
-    const numMaior = parseInt(maior.percentual);
-    return numAtual > numMaior ? atual : maior;
-  }, analises[0]);
+    return numAtual > maior ? numAtual : maior;
+  }, 0);
+
+  const recomendados = analises.filter((item) =>
+    parseInt(item.percentual) === maiorPercentual
+  );
 
   console.log("\n========== CONTEÚDO MAIS RECOMENDADO ==========");
-  console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
-  console.log(`Compatibilidade: ${maisRecomendado.percentual} (${maisRecomendado.classificacao})`);
-  console.log(`Gêneros em comum: ${maisRecomendado.generosEmComum.length > 0 ? maisRecomendado.generosEmComum.join(", ") : "Nenhum"}`);
-  console.log(`Gêneros não explorados: ${maisRecomendado.generosNaoExplorados.length > 0 ? maisRecomendado.generosNaoExplorados.join(", ") : "Nenhum"}`);
+  recomendados.forEach((maisRecomendado) => {  
+    console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
+    console.log(`Compatibilidade: ${maisRecomendado.percentual} (${maisRecomendado.classificacao})`);
+    console.log(`Gêneros em comum: ${maisRecomendado.generosEmComum.length > 0 ? maisRecomendado.generosEmComum.join(", ") : "Nenhum"}`);
+    console.log(`Gêneros não explorados: ${maisRecomendado.generosNaoExplorados.length > 0 ? maisRecomendado.generosNaoExplorados.join(", ") : "Nenhum"}`);
+  });
   console.log("================================================\n");
 }
 
@@ -236,12 +258,18 @@ async function criaMenuInterativo() {
           : console.log("\n❌ Usuário não encontrado. Crie seu perfil primeiro (Opção 1).");
         break;
       case "3":
-        // Usando o AWAIT dentro do loop do menu
         await carregarCatalogoAsync();
         break;
       case "4":
         usuarioCriado
-          ? await exibirCompatibilidadeAsync(usuarioCriado, catalogo)
+          ? await exibirCompatibilidadeAsync(
+              usuarioCriado, 
+              catalogo, 
+              // 🎯 FUNÇÃO CALLBACK PASSADA AQUI
+              (totalItens, nomeUsuario) => {
+                console.log(`\n✨ [NOTIFICAÇÃO]: Análise finalizada para ${nomeUsuario}! ${totalItens} títulos foram processados.`);
+              }
+            )
           : console.log("\n❌ Usuário não encontrado. Crie seu perfil primeiro (Opção 1).");
         break;
       case "5":
