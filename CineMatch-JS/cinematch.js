@@ -228,7 +228,7 @@ function exibirConteudoMaisRecomendado(usuario, catalogo) {
       .sort(() => 0.5 - Math.random())
       .slice(0, 2);
   }
-
+ 
   console.log(`\n========== CONTEÚDO MAIS RECOMENDADO DE ${usuario.nome.toUpperCase()} ==========`);
   recomendados.forEach((maisRecomendado) => {
     console.log(`\n🏆 Título: ${maisRecomendado.titulo} (${maisRecomendado.tipo})`);
