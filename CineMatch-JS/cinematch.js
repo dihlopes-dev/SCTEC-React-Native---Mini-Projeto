@@ -298,3 +298,17 @@ async function criaMenuInterativo() {
 
 // Executa a função assíncrona do menu
 criaMenuInterativo();
+
+
+/**
+ * ============================================================================
+ * 🎬 CineMatch JS - Sistema de Recomendação no Terminal
+ * 
+ * Mini projeto desenvolvido para o curso de Desenvolvimento Mobile React Native.
+ * 
+ * 👨‍💻 Desenvolvedores:
+ *   - Roberto Pedro da Silva
+ *   - Diego Pereira Lopes
+ * 
+ * ============================================================================
+ */
