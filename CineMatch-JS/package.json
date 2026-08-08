@@ -1,0 +1,20 @@
+{
+  "name": "cinematch-js",
+  "version": "1.0.0",
+  "description": "Sistema de recomendação de filmes e séries no terminal - M1S6 SCTEC",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "javascript",
+    "cli",
+    "react-native-course",
+    "poo"
+  ],
+  "author": "Roberto Pedro da Silva, Diego Pereira Lopes",
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}
